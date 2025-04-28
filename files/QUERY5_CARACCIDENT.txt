@@ -1,0 +1,105 @@
+CREATE TABLE Person (
+ driver_id INT PRIMARY KEY,
+ name VARCHAR(50) NOT NULL,
+ address VARCHAR(255)
+);
+
+CREATE TABLE Car (
+ license VARCHAR(20) PRIMARY KEY,
+ model VARCHAR(50),
+ year INT
+);
+
+CREATE TABLE Accident (
+ reportno VARCHAR(20) PRIMARY KEY,
+ date DATE,
+ location VARCHAR(100)
+);
+
+CREATE TABLE Owns (
+ driver_id INT,
+ license VARCHAR(20),
+ PRIMARY KEY (driver_id, license),
+ FOREIGN KEY (driver_id) REFERENCES Person(driver_id),
+ FOREIGN KEY (license) REFERENCES Car(license)
+);
+
+CREATE TABLE Participated (
+ driver_id INT,
+ car VARCHAR(20),
+ report_number VARCHAR(20),
+ damage_amount DECIMAL(10,2),
+ PRIMARY KEY (driver_id, car, report_number),
+ FOREIGN KEY (driver_id) REFERENCES Person(driver_id),
+ FOREIGN KEY (car) REFERENCES Car(license),
+ FOREIGN KEY (report_number) REFERENCES Accident(reportno)
+);
+
+INSERT INTO Person (driver_id, name, address) VALUES
+ (1, 'Alice', '123 Maple St'),
+ (2, 'Bob', '456 Oak Ave'),
+ (3, 'HT', '789 Pine Rd'),
+ (4, 'Charlie','101 Elm St');
+
+SELECT *
+FROM person;
+
+INSERT INTO Car (license, model, year) VALUES
+ ('HT1234', 'Honda Civic', 2002),
+ ('Mum2011', 'Toyota Corolla', 1999),
+ ('DLX5678', 'Ford Focus', 2004);
+
+SELECT *
+FROM car;
+
+INSERT INTO Accident (reportno , date, location) VALUES
+ ('AR100', '2004-05-10', 'Mumbai'),
+ ('AR120', '2004-08-15', 'Delhi'),
+ ('AR130', '2005-07-20', 'Bangalore');
+
+SELECT *
+FROM accident;
+
+INSERT INTO Owns (driver_id, license) VALUES
+ (3, 'HT1234'),
+ (1, 'Mum2011'),
+ (2, 'DLX5678'),
+ (4, 'Mum2011');
+
+SELECT *
+FROM owns;
+
+INSERT INTO Participated (driver_id, car, report_number, damage_amount) VALUES
+ (3, 'HT1234', 'AR100', 2500.00),
+ (1, 'Mum2011', 'AR120', 3500.00),
+ (4, 'Mum2011', 'AR120', 1500.00),
+ (2, 'DLX5678', 'AR130', 4000.00);
+
+SELECT *
+FROM participated;
+
+SELECT
+COUNT(DISTINCT o.driver_id) AS num_people
+FROM Owns o
+JOIN Participated pa
+ON o.license = pa.car
+JOIN Accident a
+ON pa.report_number = a.reportno
+WHERE YEAR(a.date) = 2004;
+
+SELECT
+COUNT(DISTINCT pa.report_number) AS num_accidents
+FROM Person p
+JOIN Owns o
+ON p.driver_id = o.driver_id
+JOIN Participated pa
+ON o.license = pa.car
+WHERE p.name = 'HT';
+
+UPDATE Participated
+SET damage_amount = 4000
+WHERE car = 'Mum2011'
+AND report_number = 'AR120';
+
+SELECT *
+FROM participated;

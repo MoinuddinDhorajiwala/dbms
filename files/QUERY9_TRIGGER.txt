@@ -1,0 +1,37 @@
+CREATE TABLE employees (
+ employee_id INT PRIMARY KEY,
+ empname VARCHAR(50),
+ salary DECIMAL(8,2)
+);
+
+CREATE TABLE salary_changes (
+ employee_id INT,
+ changes_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+ OLD_SALARY DECIMAL(8,2),
+ NEW_SALARY DECIMAL(8,2),
+ PRIMARY KEY (employee_id, changes_at)
+);
+
+DELIMITER $$
+CREATE TRIGGER before_update_salary
+BEFORE UPDATE ON employees
+FOR EACH ROW
+BEGIN
+ IF NEW.salary <> OLD.salary THEN
+ INSERT INTO salary_changes(employee_id, OLD_SALARY, NEW_SALARY)
+ VALUES (NEW.employee_id, OLD.salary, NEW.salary);
+ END IF;
+END$$
+DELIMITER ;
+
+INSERT INTO employees (employee_id, empname, salary) VALUES
+(1, 'John Doe', 50000.00),
+(2, 'Alice Smith', 60000.00),
+(3, 'Bob Johnson', 45000.00);
+
+UPDATE employees SET salary = 55000.00 WHERE employee_id = 1;
+UPDATE employees SET salary = 63000.00 WHERE employee_id = 2;
+UPDATE employees SET salary = 47000.00 WHERE employee_id = 3;
+
+SELECT * 
+FROM salary_changes;

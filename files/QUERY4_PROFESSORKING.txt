@@ -1,0 +1,133 @@
+CREATE TABLE Student (
+  name VARCHAR(50),
+  student_no INT PRIMARY KEY,
+  class VARCHAR(20),
+  major VARCHAR(50)
+);
+
+CREATE TABLE Course (
+  course_name VARCHAR(100),
+  course_no VARCHAR(20) PRIMARY KEY,
+  credit_hours INT,
+  department VARCHAR(50)
+);
+
+CREATE TABLE Section (
+  section_identifier VARCHAR(20) PRIMARY KEY,
+  course_no VARCHAR(20),
+  semester VARCHAR(20),
+  year INT,
+  instructor VARCHAR(50),
+  FOREIGN KEY (course_no) REFERENCES Course(course_no)
+);
+
+CREATE TABLE Grade_Report (
+  student_no INT,
+  section_identifier VARCHAR(20),
+  grade CHAR(2),
+  PRIMARY KEY (student_no, section_identifier),
+  FOREIGN KEY (student_no) REFERENCES Student(student_no),
+  FOREIGN KEY (section_identifier) REFERENCES Section(section_identifier)
+);
+
+CREATE TABLE Prerequisite (
+  course_no VARCHAR(20),
+  prerequisite_no VARCHAR(20),
+  PRIMARY KEY (course_no, prerequisite_no),
+  FOREIGN KEY (course_no) REFERENCES Course(course_no),
+  FOREIGN KEY (prerequisite_no) REFERENCES Course(course_no)
+);
+
+INSERT INTO Student (name, student_no, class, major) VALUES
+('Amit', 101, 'FY', 'CS'),
+('Neha', 102, 'SY', 'IT'),
+('Rohit', 103, 'TY', 'CS'),
+('Simran', 104, 'FY', 'ECE');
+
+SELECT * 
+FROM Student;
+
+INSERT INTO Course (course_name, course_no, credit_hours, department) VALUES
+('Data Structures', 'CS201', 3, 'CS'),
+('Database Systems', 'CS301', 4, 'CS'),
+('Electronics Basics', 'EC101', 3, 'ECE');
+
+SELECT *
+FROM Course;
+
+INSERT INTO Section (section_identifier, course_no, semester, year, instructor) VALUES
+('S1', 'CS201', 'Fall', 1998, 'Professor King'),
+('S2', 'CS301', 'Spring', 1999, 'Professor Queen'),
+('S3', 'EC101', 'Fall', 1998, 'Professor King');
+
+SELECT *
+FROM Section;
+
+INSERT INTO Grade_Report (student_no, section_identifier, grade) VALUES
+(101, 'S1', 'O'),
+(102, 'S2', 'A'),
+(103, 'S1', 'B'),
+(104, 'S3', 'O');
+
+SELECT *
+FROM Grade_Report;
+
+SELECT *
+FROM Prerequisite;
+
+INSERT INTO Prerequisite (course_no, prerequisite_no) VALUES
+('CS301', 'CS201');
+
+SELECT *
+FROM Prerequisite;
+
+SELECT c.course_name
+FROM Course c
+JOIN Section s ON c.course_no = s.course_no
+WHERE s.instructor = 'Professor King' AND s.year = 1998;
+
+SELECT *
+FROM Course;
+
+INSERT INTO Course (course_name, course_no, credit_hours, department)
+VALUES ('Knowledge Engineering', 'CS4390', 3, 'CS');
+
+SELECT *
+FROM Course;
+
+SELECT name
+FROM Student
+WHERE major = 'CS';
+
+SELECT *
+FROM STUDENT;
+
+DELETE FROM Student
+WHERE name = 'Rohit' AND student_no = 103;
+
+SELECT *
+FROM STUDENT;
+
+CREATE VIEW CS_Students AS
+SELECT name, student_no
+FROM Student
+WHERE major = 'CS';
+
+SELECT *
+FROM CS_Students;
+
+SELECT s.name
+FROM Student s
+JOIN Grade_Report g ON s.student_no = g.student_no
+WHERE g.grade = 'O';
+
+
+
+
+
+
+
+
+
+
+

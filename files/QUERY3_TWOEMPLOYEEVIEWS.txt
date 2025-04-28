@@ -1,0 +1,60 @@
+CREATE TABLE Employee (
+  Emp_no INT PRIMARY KEY,
+  Emp_name VARCHAR(50),
+  Emp_add VARCHAR(100),
+  ph_no VARCHAR(15),
+  email_id VARCHAR(50),
+  salary INT
+  );
+
+INSERT INTO Employee (Emp_no, Emp_name, Emp_add, ph_no, email_id, salary) VALUES
+(100, 'John Doe', '123 Street, NY', '9876543210', 'john.doe@email.com', 60000),
+(101, 'Amit Kumar', '456 Road, CA', '9123456780', 'amit.kumar@email.com', 75000),
+(102, 'Alice Brown', '789 Avenue, TX', '9234567890', 'alice.brown@email.com', 82000),
+(103, 'Amina Shah', '321 Lane, IL', '9345678901', 'amina.shah@email.com', 90000),
+(104, 'Michael Smith', '567 Blvd, FL', '9456789012', 'michael.smith@email.com', 50000),
+(105, 'Amir Khan', '654 Park, OH', '9567890123', 'amir.khan@email.com', 70000);
+
+SELECT *
+FROM EMPLOYEE;
+
+SELECT *
+FROM EMPLOYEE
+WHERE Emp_no = 100;
+
+SELECT *
+FROM EMPLOYEE
+WHERE SALARY BETWEEN 50000 AND 100000;
+
+SELECT *
+FROM EMPLOYEE
+WHERE EMP_NAME LIKE 'AMI%';
+
+SELECT *
+FROM EMPLOYEE
+ORDER BY SALARY DESC
+LIMIT 1 OFFSET 1;
+
+SHOW TABLES;
+
+CREATE VIEW HighSalaryEmployees AS
+SELECT Emp_no, Emp_name, salary FROM Employee WHERE salary > 80000;
+
+SELECT *
+FROM HighSalaryEmployees;
+
+CREATE VIEW EmployeeContacts AS
+SELECT Emp_no, Emp_name, ph_no, email_id FROM Employee;
+
+SELECT *
+FROM EMPLOYEECONTACTS;
+
+
+
+
+
+
+
+
+
+

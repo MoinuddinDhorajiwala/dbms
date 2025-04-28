@@ -1,0 +1,91 @@
+CREATE TABLE Employee (
+ empname VARCHAR(50) PRIMARY KEY,
+ street VARCHAR(100),
+ city VARCHAR(50),
+ date_of_joining DATE
+);
+
+CREATE TABLE Company (
+ company_name VARCHAR(100) PRIMARY KEY,
+ city VARCHAR(50)
+);
+
+CREATE TABLE Works (
+ empname VARCHAR(50),
+ company_name VARCHAR(100),
+ salary DECIMAL(10,2),
+ PRIMARY KEY (empname, company_name),
+ FOREIGN KEY (empname) REFERENCES Employee(empname),
+ FOREIGN KEY (company_name) REFERENCES Company(company_name)
+);
+
+CREATE TABLE Manages (
+ empname VARCHAR(50),
+ manager_name VARCHAR(50),
+ PRIMARY KEY (empname),
+ FOREIGN KEY (empname) REFERENCES Employee(empname),
+ FOREIGN KEY (manager_name) REFERENCES Employee(empname)
+);
+
+INSERT INTO Employee (empname, street, city, date_of_joining) VALUES
+ ('John', '12 Oak Avenue', 'Goa', '2019-06-15'),
+ ('Alice', '23 Pine Street', 'Delhi', '2020-10-01'),
+ ('Bob', '45 Elm Road', 'Mumbai', '2018-10-12'),
+ ('Charlie', '78 Cedar Blvd', 'Bangalore','2021-01-20'),
+ ('Diana', '90 Spruce Lane', 'Mumbai', '2017-04-05');
+
+INSERT INTO Company (company_name, city) VALUES
+ ('ABC Corporation', 'Mumbai'),
+ ('XYZ Ltd', 'Delhi'),
+ ('Acme Inc.', 'Bangalore');
+
+INSERT INTO Works (empname, company_name, salary) VALUES
+ ('John', 'ABC Corporation', 55000.00),
+ ('Alice', 'XYZ Ltd', 72000.00),
+ ('Bob', 'ABC Corporation', 48000.00),
+ ('Charlie', 'Acme Inc.', 66000.00),
+ ('Diana', 'ABC Corporation', 59000.00);
+
+INSERT INTO Manages (empname, manager_name) VALUES
+ ('John', 'Alice'),
+ ('Bob', 'John'),
+ ('Charlie', 'Bob'),
+ ('Diana', 'Alice');
+
+SELECT *
+FROM Employee;
+
+UPDATE Employee
+SET city = 'Mumbai'
+WHERE empname = 'John';
+
+SELECT *
+FROM Employee;
+
+SELECT empname
+FROM Employee
+WHERE MONTH(date_of_joining) = 10;
+
+SELECT *
+FROM Works;
+
+UPDATE Works
+SET salary = salary * 1.10
+WHERE company_name = 'ABC Corporation';
+
+SELECT *
+FROM Works;
+
+SELECT e.empname
+FROM Employee e
+JOIN Works w ON e.empname = w.empname
+JOIN Company c ON w.company_name = c.company_name
+WHERE e.city = c.city;
+
+SELECT w.empname
+FROM Works w
+WHERE salary > (
+ SELECT AVG(salary)
+ FROM Works
+ WHERE company_name = w.company_name
+);

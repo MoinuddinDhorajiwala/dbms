@@ -1,0 +1,86 @@
+CREATE TABLE Employee (
+ eid INT PRIMARY KEY,
+ emp_name VARCHAR(50),
+ street VARCHAR(100),
+ city VARCHAR(50)
+);
+
+CREATE TABLE Works (
+ eid INT,
+ cid INT,
+ salary DECIMAL(10,2),
+ PRIMARY KEY (eid, cid),
+ FOREIGN KEY (eid) REFERENCES Employee(eid)
+);
+
+CREATE TABLE Company (
+ cid INT PRIMARY KEY,
+ comp_name VARCHAR(100),
+ city VARCHAR(50)
+);
+
+CREATE TABLE Manager (
+ eid INT PRIMARY KEY,
+ manager_name VARCHAR(50),
+ FOREIGN KEY (eid) REFERENCES Employee(eid)
+);
+
+INSERT INTO Employee (eid, emp_name, street, city) VALUES
+(1, 'Steve', '12 Pine Street', 'Mumbai'),
+(2, 'Sonia', '45 Oak Avenue', 'Delhi'),
+(3, 'Arjun', '78 Elm Road', 'Bangalore'),
+(4, 'Sameer', '34 Cedar Blvd', 'Mumbai');
+
+SELECT *
+FROM employee;
+
+INSERT INTO Company (cid, comp_name, city) VALUES
+(101, 'Accenture', 'Mumbai'),
+(102, 'Infosys', 'Bangalore');
+
+SELECT *
+FROM company;
+
+INSERT INTO Works (eid, cid, salary) VALUES
+(1, 101, 32000),
+(2, 102, 29000),
+(3, 101, 31000),
+(4, 101, 40000);
+
+SELECT *
+FROM works;
+
+INSERT INTO Manager (eid, manager_name) VALUES
+(1, 'Arjun'),
+(2, 'Steve'),
+(3, 'Sonia'),
+(4, 'Arjun');
+
+SELECT *
+FROM manager;
+
+SELECT emp_name
+FROM Employee
+WHERE emp_name LIKE 'S%';
+
+SELECT e.emp_name, (w.salary * 12) AS annual_salary
+FROM Employee e
+JOIN Works w ON e.eid = w.eid;
+
+SELECT e.emp_name, e.street, e.city
+FROM Employee e
+JOIN Works w ON e.eid = w.eid
+JOIN Company c ON w.cid = c.cid
+WHERE c.comp_name = 'Accenture'
+ AND w.salary > 30000;
+
+SELECT COUNT(*) AS total_employees
+FROM Employee;
+
+
+
+
+
+
+
+

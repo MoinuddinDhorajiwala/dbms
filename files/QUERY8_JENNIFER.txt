@@ -1,0 +1,101 @@
+CREATE TABLE Employee (
+ employee_name VARCHAR(50) PRIMARY KEY,
+ street VARCHAR(100),
+ city VARCHAR(50),
+ date_of_join DATE
+);
+
+CREATE TABLE Company (
+ company_name VARCHAR(100) PRIMARY KEY,
+ city VARCHAR(50)
+);
+
+CREATE TABLE Works (
+ employee_name VARCHAR(50),
+ company_name VARCHAR(100),
+ salary DECIMAL(10,2),
+ PRIMARY KEY (employee_name, company_name),
+ FOREIGN KEY (employee_name) REFERENCES Employee(employee_name)
+);
+
+CREATE TABLE Manages (
+ employee_name VARCHAR(50),
+ manager_name VARCHAR(50),
+ PRIMARY KEY (employee_name),
+ FOREIGN KEY (employee_name) REFERENCES Employee(employee_name) ON DELETE CASCADE,
+ FOREIGN KEY (manager_name) REFERENCES Employee(employee_name) ON DELETE CASCADE
+);
+
+INSERT INTO Employee (employee_name, street, city, date_of_join) VALUES
+('John', 'Pine Street', 'Mumbai', '2021-04-10'),
+('Alice', 'Oak Avenue', 'Delhi', '2020-05-15'),
+('Jennifer', 'Maple Road', 'Bangalore', '2019-04-20'),
+('Sam', 'Cedar Blvd', 'Mumbai', '2022-03-22'),
+('David', 'Cedar Blvd', 'Mumbai', '2021-08-01'); -- Added so the join query gives result
+
+SELECT * FROM Employee;
+
+
+INSERT INTO Company (company_name, city) VALUES
+('ABC Company', 'Mumbai'),
+('XYZ Company', 'Bangalore');
+
+SELECT * FROM Company;
+
+INSERT INTO Works (employee_name, company_name, salary) VALUES
+('John', 'ABC Company', 50000),
+('Alice', 'ABC Company', 60000),
+('Jennifer', 'XYZ Company', 55000),
+('Sam', 'ABC Company', 45000),
+('David', 'ABC Company', 47000); -- Added
+
+SELECT * FROM Works;
+
+INSERT INTO Manages (employee_name, manager_name) VALUES
+('John', 'Alice'),
+('Alice', 'Sam'),
+('Jennifer', 'John'),
+('Sam', 'John'),
+('David', 'Sam'); -- Added (David and Sam live at Cedar Blvd, Mumbai)
+
+SELECT * FROM Manages;
+
+SELECT * FROM Works;
+
+UPDATE Works
+SET salary = salary * 1.25
+WHERE company_name = 'ABC Company';
+
+SELECT * FROM Works;
+
+SELECT e.employee_name
+FROM Employee e
+JOIN Manages m ON e.employee_name = m.employee_name
+JOIN Employee mgr ON m.manager_name = mgr.employee_name
+WHERE e.city = mgr.city 
+  AND e.street = mgr.street;
+
+SELECT employee_name
+FROM Employee
+WHERE MONTH(date_of_join) = 4;
+
+SELECT * FROM Works;
+
+DELETE FROM Works
+WHERE employee_name = 'Jennifer' AND company_name = 'XYZ Company';
+
+SELECT * FROM Works;
+
+SELECT * FROM Employee;
+
+DELETE FROM Employee
+WHERE employee_name = 'Jennifer';
+
+SELECT * FROM Employee;
+
+
+
+
+
+
+

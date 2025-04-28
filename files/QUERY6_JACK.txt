@@ -1,0 +1,99 @@
+CREATE TABLE Employee (
+ eid INT PRIMARY KEY,
+ ename VARCHAR(50),
+ street VARCHAR(100),
+ city VARCHAR(50)
+);
+
+CREATE TABLE Works (
+ eid INT,
+ cid INT,
+ salary DECIMAL(10,2),
+ PRIMARY KEY (eid, cid),
+ FOREIGN KEY (eid) REFERENCES Employee(eid)
+);
+
+CREATE TABLE Company (
+ cid INT PRIMARY KEY,
+ cname VARCHAR(100),
+ city VARCHAR(50)
+);
+
+INSERT INTO Employee (eid, ename, street, city) VALUES
+(1, 'Jack', '123 Pine St', 'Delhi'),
+(2, 'Alice', '456 Maple Rd', 'Mumbai'),
+(3, 'Bob', '789 Elm Ave', 'Bangalore'),
+(4, 'Carol', '321 Oak Blvd', 'Delhi');
+
+SELECT *
+FROM employee;
+
+INSERT INTO Company (cid, cname, city) VALUES
+(101, 'ANZ Corporation', 'Mumbai'),
+(102, 'TechWorld', 'Delhi'),
+(103, 'SoftSolutions', 'Bangalore');
+
+SELECT *
+FROM company;
+
+INSERT INTO Works (eid, cid, salary) VALUES
+(1, 101, 50000),
+(2, 101, 55000),
+(3, 103, 60000),
+(4, 102, 45000);
+
+SELECT *
+FROM works;
+
+SELECT *
+FROM employee;
+
+UPDATE Employee
+SET city = 'Mumbai'
+WHERE ename = 'Jack';
+
+SELECT *
+FROM employee;
+
+SELECT *
+FROM works;
+
+UPDATE Works
+SET salary = salary * 1.10
+WHERE cid = (
+ SELECT cid
+ FROM Company
+ WHERE cname = 'ANZ Corporation'
+);
+
+SELECT *
+FROM works;
+
+SELECT e.eid
+FROM Employee e
+JOIN Works w ON e.eid = w.eid
+JOIN Company c ON w.cid = c.cid
+WHERE e.city = c.city;
+
+SELECT COUNT(*) AS total_employees
+FROM Employee;
+
+SELECT e.ename, w.salary
+FROM Employee e
+JOIN Works w ON e.eid = w.eid
+WHERE w.salary = (
+ SELECT MAX(salary)
+ FROM Works
+);
+
+
+
+
+
+
+
+
+
+
+
+
